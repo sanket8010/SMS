@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IMS College Ahmednagar</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        /* Header */
+        .header {
+            background-color: #0b3c5d;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* Buttons */
+        .nav-buttons a {
+            text-decoration: none;
+            color: white;
+            margin-left: 15px;
+            padding: 10px 18px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-buttons a.register { background-color: #328cc1; }
+        .nav-buttons a.register:hover { background-color: #1d6fa5; }
+
+        .nav-buttons a.student-login { background-color: #007bff; }
+        .nav-buttons a.student-login:hover { background-color: #0056b3; }
+
+        .nav-buttons a.admin-login { background-color: #28a745; }
+        .nav-buttons a.admin-login:hover { background-color: #1e7e34; }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 70px 20px;
+            background: linear-gradient(to right, #328cc1, #0b3c5d);
+            color: white;
+        }
+
+        .hero h2 {
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 750px;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+        /* Content */
+        .content {
+            padding: 50px 40px;
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            width: 32%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .box h3 {
+            color: #0b3c5d;
+            margin-bottom: 10px;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 60px 40px;
+            background-color: #ffffff;
+        }
+
+        .gallery h2 {
+            text-align: center;
+            color: #0b3c5d;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #0b3c5d;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            .box {
+                width: 100%;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>IMS College, Ahmednagar</h1>
+        <div class="nav-buttons">
+            <a href="{% url 'student_register' %}" class="register">Register</a>
+            <a href="{% url 'student_login' %}" class="student-login">Student Login</a>
+            <a href="{% url 'admin_login' %}" class="admin-login">Admin Login</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h2>Welcome to IMS College</h2>
+        <p>
+            Institute of Management Studies, Ahmednagar is committed to
+            providing quality education, modern infrastructure and
+            career-oriented programs for student success.
+        </p>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+        <div class="box">
+            <h3>Our Courses</h3>
+            <p>MCA, MBA, BCA, BBA and Computer Science Programs</p>
+        </div>
+
+        <div class="box">
+            <h3>Why Choose Us</h3>
+            <p>Experienced faculty, smart classrooms and strong placement support</p>
+        </div>
+
+        <div class="box">
+            <h3>Student Support</h3>
+            <p>Mentoring, career guidance and academic excellence</p>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <div class="gallery">
+        <h2>Our Campus</h2>
+        <div class="gallery-grid">
+            <img src="{% static 'core/images/college1.jpg' %}" alt="Campus Image">
+            <img src="{% static 'core/images/college7.jpg' %}" alt="Campus Image">
+            <img src="{% static 'core/images/college3.jpg' %}" alt="Campus Image">
+            <img src="{% static 'core/images/college9.jpg' %}" alt="Campus Image">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2026 IMS College, Ahmednagar | All Rights Reserved</p>
+    </div>
+
+</body>
+</html>

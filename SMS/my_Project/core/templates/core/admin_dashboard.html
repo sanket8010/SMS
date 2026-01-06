@@ -1,0 +1,275 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f4f6f9;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.right-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.logout-btn {
+    padding: 8px 15px;
+    background-color: #dc3545;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* SEARCH */
+.search-box input {
+    padding: 8px 12px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* BUTTONS */
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-buttons button {
+    padding: 7px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+}
+
+.btn-pending { background-color: #007bff; }
+.btn-verified { background-color: #28a745; }
+.btn-rejected { background-color: #dc3545; }
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+th {
+    background: #f1f1f1;
+}
+
+.table-section {
+    display: none;
+}
+
+.table-section.active {
+    display: block;
+}
+
+.verified { color: green; font-weight: bold; }
+.rejected { color: red; font-weight: bold; }
+
+.btn {
+    padding: 6px 10px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-verify { background: #28a745; }
+.btn-reject, .btn-delete { background: #dc3545; }
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h1>Admin Dashboard</h1>
+
+    <div class="right-box">
+        <!-- LOGOUT (TOP RIGHT) -->
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+
+        <!-- SEARCH -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by username...">
+        </div>
+
+        <!-- BUTTONS (SEARCH KE NICHE) -->
+        <div class="filter-buttons">
+            <button id="btn-pending" class="btn-pending" onclick="showTable('pending')">
+                Pending Students
+            </button>
+            <button id="btn-verified" class="btn-verified" onclick="showTable('verified')">
+                Verified Students
+            </button>
+            <button id="btn-rejected" class="btn-rejected" onclick="showTable('rejected')">
+                Rejected Students
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 🔵 PENDING -->
+<div id="pending" class="table-section">
+    <h1>Pending Students</h1>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Address</th>
+            <th>Marks</th>
+            <th>Gender</th>
+            <th>Course</th>
+            <th>Action</th>
+        </tr>
+        {% for student in pending_students %}
+        <tr>
+            <td class="student-name">{{ student.user.username }}</td>
+            <td>{{ student.user.email }}</td>
+            <td>{{ student.dob }}</td>
+            <td>{{ student.address }}</td>
+            <td>{{ student.previous_marks }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.course }}</td>
+            <td>
+                <a href="{% url 'verify_student' student.id %}" class="btn btn-verify">Verify</a>
+                <a href="{% url 'reject_student' student.id %}" class="btn btn-reject">Reject</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8">No pending students</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!-- 🟢 VERIFIED -->
+<div id="verified" class="table-section">
+    <h1>Verified Students</h1>
+    <table>
+        <tr>
+            <th>Roll</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Address</th>
+            <th>Marks</th>
+            <th>Gender</th>
+            <th>Course</th>
+            <th>Action</th>
+        </tr>
+        {% for student in verified_students %}
+        <tr>
+            <td>{{ student.roll_number }}</td>
+            <td class="student-name">{{ student.user.username }}</td>
+            <td>{{ student.user.email }}</td>
+            <td>{{ student.dob }}</td>
+            <td>{{ student.address }}</td>
+            <td>{{ student.previous_marks }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.course }}</td>
+            <td>
+                <form method="POST" action="{% url 'delete_student' student.id %}"
+                    onsubmit="return confirmDelete();">
+                    {% csrf_token %}
+                    <button class="btn btn-delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="9">No verified students</td></tr>
+            {% endfor %}
+    </table>
+</div>
+
+<!-- 🔴 REJECTED -->
+<div id="rejected" class="table-section">
+    <h1>Rejected Students</h1>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Address</th>
+            <th>Marks</th>
+            <th>Gender</th>
+            <th>Course</th>
+            <th>Status</th>
+        </tr>
+        {% for student in rejected_students %}
+        <tr>
+            <td class="student-name">{{ student.user.username }}</td>
+            <td>{{ student.user.email }}</td>
+            <td>{{ student.dob }}</td>
+            <td>{{ student.address }}</td>
+            <td>{{ student.previous_marks }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.course }}</td>
+            <td class="rejected">Rejected</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8">No rejected students</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script>
+function showTable(type) {
+
+    document.querySelectorAll('.table-section').forEach(div => {
+        div.classList.remove('active');
+    });
+
+    document.getElementById(type).classList.add('active');
+
+    ['pending','verified','rejected'].forEach(t => {
+        document.getElementById('btn-' + t).style.display = 'inline-block';
+    });
+
+    document.getElementById('btn-' + type).style.display = 'none';
+}
+
+/* DEFAULT */
+showTable('pending');
+
+/* SEARCH */
+document.getElementById("searchInput").addEventListener("keyup", function () {
+    let filter = this.value.toLowerCase();
+    document.querySelectorAll(".student-name").forEach(name => {
+        let row = name.closest("tr");
+        row.style.display = name.innerText.toLowerCase().includes(filter) ? "" : "none";
+    });
+});
+
+function confirmDelete() {
+    return confirm("Are you sure you want to delete this student?");
+}
+</script>
+
+</body>
+</html>

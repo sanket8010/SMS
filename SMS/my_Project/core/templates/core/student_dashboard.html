@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            padding: 25px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        p {
+            font-size: 16px;
+        }
+        .status {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .pending { color: orange; }
+        .verified { color: green; }
+        .rejected { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Welcome, {{ request.user.username }}</h2>
+
+    <hr>
+
+    <p><strong>Email:</strong> {{ request.user.email }}</p>
+    <p><strong>Date of Birth:</strong> {{ student.dob }}</p>
+    <p><strong>Age:</strong> {{ student.age }}</p>
+    <p><strong>Gender:</strong> {{ student.gender }}</p>
+    <p><strong>Course:</strong> {{ student.course }}</p>
+    <p><strong>Previous Marks:</strong> {{ student.previous_marks }}</p>
+
+    {% if student.roll_number %}
+        <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+    {% endif %}
+
+    <hr>
+
+    <p class="status">
+        Status:
+        {% if student.status == 'pending' %}
+            <span class="pending">Pending ⏳</span>
+        {% elif student.status == 'verified' %}
+            <span class="verified">Verified ✅</span>
+        {% else %}
+            <span class="rejected">Rejected ❌</span>
+        {% endif %}
+    </p>
+
+    <br>
+
+    <a href="{% url 'logout' %}">Logout</a>
+</div>
+
+</body>
+</html>

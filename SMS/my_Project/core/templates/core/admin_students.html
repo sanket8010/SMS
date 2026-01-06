@@ -1,0 +1,23 @@
+<h2>All Students</h2>
+
+<table border="1">
+<tr>
+<th>Name</th><th>Phone</th><th>Marks</th>
+<th>Status</th><th>Roll No</th><th>Action</th>
+</tr>
+
+{% for s in students %}
+<tr>
+<td>{{ s.name }}</td>
+<td>{{ s.phone }}</td>
+<td>{{ s.previous_marks }}</td>
+<td>{{ s.is_verified }}</td>
+<td>{{ s.roll_number }}</td>
+<td>
+{% if not s.is_verified %}
+<a href="/verify/{{ s.id }}/">Verify</a>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
